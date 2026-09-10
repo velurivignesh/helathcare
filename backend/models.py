@@ -10,4 +10,12 @@ class Patient(Base):
     name = Column(String, nullable=False)
     age = Column(Integer, nullable=False)
     phone = Column(String, nullable=False)
-    
+
+
+class Doctor(Base):
+    __tablename__ = "doctors"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    specialization = Column(String, nullable=False)
+    phone = Column(String, nullable=False)
