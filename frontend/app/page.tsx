@@ -1,7 +1,6 @@
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* Header */}
       <header className="border-b bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <h1 className="text-2xl font-bold text-slate-900">
@@ -28,7 +27,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main content */}
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="mb-10">
           <h2 className="text-3xl font-bold text-slate-900">
@@ -58,7 +56,37 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Features */}
+        {/* Quick Actions */}
+        <section className="mt-10">
+          <h3 className="text-xl font-semibold text-slate-900">
+            Quick Actions
+          </h3>
+
+          <div className="mt-5 grid gap-4 sm:grid-cols-3">
+            <a
+              href="/patients"
+              className="rounded-lg border border-blue-200 bg-blue-50 px-5 py-4 text-center font-medium text-blue-700 transition hover:bg-blue-100"
+            >
+              Add Patient
+            </a>
+
+            <a
+              href="/doctors"
+              className="rounded-lg border border-blue-200 bg-blue-50 px-5 py-4 text-center font-medium text-blue-700 transition hover:bg-blue-100"
+            >
+              Manage Doctors
+            </a>
+
+            <a
+              href="/appointments"
+              className="rounded-lg border border-blue-200 bg-blue-50 px-5 py-4 text-center font-medium text-blue-700 transition hover:bg-blue-100"
+            >
+              Create Appointment
+            </a>
+          </div>
+        </section>
+
+        {/* Clinic Management */}
         <section className="mt-10">
           <h3 className="text-xl font-semibold text-slate-900">
             Clinic Management
