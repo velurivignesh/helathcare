@@ -19,3 +19,14 @@ class Doctor(Base):
     name = Column(String, nullable=False)
     specialization = Column(String, nullable=False)
     phone = Column(String, nullable=False)
+
+
+class Appointment(Base):
+    __tablename__ = "appointments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    patient_id = Column(Integer, nullable=False)
+    doctor_id = Column(Integer, nullable=False)
+    appointment_date = Column(String, nullable=False)
+    appointment_time = Column(String, nullable=False)
+    reason = Column(String, nullable=False)

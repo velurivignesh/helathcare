@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from database import Base, engine, get_db
-from models import Patient, Doctor
-from schemas import PatientCreate, DoctorCreate
+from models import Patient, Doctor, Appointment
+from schemas import PatientCreate, DoctorCreate, AppointmentCreate
 
 
 Base.metadata.create_all(bind=engine)
@@ -30,6 +30,10 @@ def home():
         "message": "Healthcare Clinic Management System API is running"
     }
 
+
+# -------------------------
+# Patient Management
+# -------------------------
 
 @app.get("/patients")
 def get_patients(db: Session = Depends(get_db)):
@@ -95,6 +99,10 @@ def delete_patient(
     }
 
 
+# -------------------------
+# Doctor Management
+# -------------------------
+
 @app.get("/doctors")
 def get_doctors(db: Session = Depends(get_db)):
     doctors = db.query(Doctor).all()
@@ -156,4 +164,100 @@ def delete_doctor(
 
     return {
         "message": "Doctor deleted successfully"
+    }
+
+
+# -------------------------
+# Appointment Management
+# -------------------------
+
+@app.get("/appointments")
+def get_appointments(db: Session = Depends(get_db)):
+    appointments = db.query(Appointment).all()
+
+    return {
+        "appointments": [
+            {
+                "id": appointment.id,
+                "patient_id": appointment.patient_id,
+                "doctor_id": appointment.doctor_id,
+                "appointment_date": appointment.appointment_date,
+                "appointment_time": appointment.appointment_time,
+                "reason": appointment.reason
+            }
+            for appointment in appointments
+        ]
+    }
+
+
+@app.post("/appointments")
+def create_appointment(
+    appointment: AppointmentCreate,
+    db: Session = Depends(get_db)
+):
+    patient = db.query(Patient).filter(
+        Patient.id == appointment.patient_id
+    ).first()
+
+    if not patient:
+        raise HTTPException(
+            status_code=404,
+            detail="Patient not found"
+        )
+
+    doctor = db.query(Doctor).filter(
+        Doctor.id == appointment.doctor_id
+    ).first()
+
+    if not doctor:
+        raise HTTPException(
+            status_code=404,
+            detail="Doctor not found"
+        )
+
+    new_appointment = Appointment(
+        patient_id=appointment.patient_id,
+        doctor_id=appointment.doctor_id,
+        appointment_date=appointment.appointment_date,
+        appointment_time=appointment.appointment_time,
+        reason=appointment.reason
+    )
+
+    db.add(new_appointment)
+    db.commit()
+    db.refresh(new_appointment)
+
+    return {
+        "message": "Appointment created successfully",
+        "appointment": {
+            "id": new_appointment.id,
+            "patient_id": new_appointment.patient_id,
+            "doctor_id": new_appointment.doctor_id,
+            "appointment_date": new_appointment.appointment_date,
+            "appointment_time": new_appointment.appointment_time,
+            "reason": new_appointment.reason
+        }
+    }
+
+
+@app.delete("/appointments/{appointment_id}")
+def delete_appointment(
+    appointment_id: int,
+    db: Session = Depends(get_db)
+):
+    appointment = db.query(Appointment).filter(
+        Appointment.id == appointment_id
+    ).first()
+
+    if not appointment:
+        raise HTTPException(
+            status_code=404,
+            detail="Appointment not found"
+        )
+
+    db.delete(appointment)
+    db.commit()
+
+    return {
+        "message": "Appointment deleted successfully"
     }
