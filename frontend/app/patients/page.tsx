@@ -15,6 +15,7 @@ export default function PatientsPage() {
   const [phone, setPhone] = useState("");
 
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -97,6 +98,15 @@ export default function PatientsPage() {
     }
   }
 
+  const filteredPatients = patients.filter((patient) => {
+    const searchText = search.toLowerCase();
+
+    return (
+      patient.name.toLowerCase().includes(searchText) ||
+      patient.phone.toLowerCase().includes(searchText)
+    );
+  });
+
   return (
     <main className="min-h-screen bg-slate-50">
       <header className="border-b bg-white">
@@ -177,21 +187,31 @@ export default function PatientsPage() {
         </form>
 
         <section className="mt-10">
-          <h2 className="text-2xl font-bold text-slate-900">
-            Patients
-          </h2>
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-2xl font-bold text-slate-900">
+              Patients
+            </h2>
+
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search patients..."
+              className="w-64 rounded-lg border border-slate-300 bg-white px-4 py-2 outline-none focus:border-blue-500"
+            />
+          </div>
 
           {loading ? (
             <p className="mt-4 text-slate-600">
               Loading patients...
             </p>
-          ) : patients.length === 0 ? (
+          ) : filteredPatients.length === 0 ? (
             <p className="mt-4 text-slate-600">
               No patients found.
             </p>
           ) : (
             <div className="mt-4 space-y-4">
-              {patients.map((patient) => (
+              {filteredPatients.map((patient) => (
                 <div
                   key={patient.id}
                   className="rounded-xl bg-white p-5 shadow-sm"
