@@ -43,8 +43,22 @@ export default function PatientsPage() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!name || !age || !phone) {
+    const trimmedName = name.trim();
+    const trimmedPhone = phone.trim();
+    const numericAge = Number(age);
+
+    if (!trimmedName || !age || !trimmedPhone) {
       setMessage("Please fill in all fields.");
+      return;
+    }
+
+    if (numericAge < 1 || numericAge > 120) {
+      setMessage("Age must be between 1 and 120.");
+      return;
+    }
+
+    if (!/^\d{10}$/.test(trimmedPhone)) {
+      setMessage("Phone number must contain exactly 10 digits.");
       return;
     }
 
@@ -55,9 +69,9 @@ export default function PatientsPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: name,
-          age: Number(age),
-          phone: phone,
+          name: trimmedName,
+          age: numericAge,
+          phone: trimmedPhone,
         }),
       });
 
@@ -65,7 +79,7 @@ export default function PatientsPage() {
         throw new Error("Failed to create patient");
       }
 
-      setMessage(`Patient ${name} has been added successfully.`);
+      setMessage(`Patient ${trimmedName} has been added successfully.`);
 
       setName("");
       setAge("");
@@ -154,6 +168,8 @@ export default function PatientsPage() {
               value={age}
               onChange={(event) => setAge(event.target.value)}
               placeholder="Enter age"
+              min="1"
+              max="120"
               className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
             />
           </div>
@@ -167,7 +183,8 @@ export default function PatientsPage() {
               type="tel"
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
-              placeholder="Enter phone number"
+              placeholder="Enter 10-digit phone number"
+              maxLength={10}
               className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
             />
           </div>
