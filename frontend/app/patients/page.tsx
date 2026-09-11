@@ -15,6 +15,7 @@ export default function PatientsPage() {
   const [phone, setPhone] = useState("");
 
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -42,8 +43,22 @@ export default function PatientsPage() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!name || !age || !phone) {
+    const trimmedName = name.trim();
+    const trimmedPhone = phone.trim();
+    const numericAge = Number(age);
+
+    if (!trimmedName || !age || !trimmedPhone) {
       setMessage("Please fill in all fields.");
+      return;
+    }
+
+    if (numericAge < 1 || numericAge > 120) {
+      setMessage("Age must be between 1 and 120.");
+      return;
+    }
+
+    if (!/^\d{10}$/.test(trimmedPhone)) {
+      setMessage("Phone number must contain exactly 10 digits.");
       return;
     }
 
@@ -54,9 +69,9 @@ export default function PatientsPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: name,
-          age: Number(age),
-          phone: phone,
+          name: trimmedName,
+          age: numericAge,
+          phone: trimmedPhone,
         }),
       });
 
@@ -64,7 +79,7 @@ export default function PatientsPage() {
         throw new Error("Failed to create patient");
       }
 
-      setMessage(`Patient ${name} has been added successfully.`);
+      setMessage(`Patient ${trimmedName} has been added successfully.`);
 
       setName("");
       setAge("");
@@ -96,6 +111,15 @@ export default function PatientsPage() {
       setMessage("Unable to delete patient. Please check the backend.");
     }
   }
+
+  const filteredPatients = patients.filter((patient) => {
+    const searchText = search.toLowerCase();
+
+    return (
+      patient.name.toLowerCase().includes(searchText) ||
+      patient.phone.toLowerCase().includes(searchText)
+    );
+  });
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -144,6 +168,8 @@ export default function PatientsPage() {
               value={age}
               onChange={(event) => setAge(event.target.value)}
               placeholder="Enter age"
+              min="1"
+              max="120"
               className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
             />
           </div>
@@ -157,7 +183,8 @@ export default function PatientsPage() {
               type="tel"
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
-              placeholder="Enter phone number"
+              placeholder="Enter 10-digit phone number"
+              maxLength={10}
               className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
             />
           </div>
@@ -177,21 +204,31 @@ export default function PatientsPage() {
         </form>
 
         <section className="mt-10">
-          <h2 className="text-2xl font-bold text-slate-900">
-            Patients
-          </h2>
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-2xl font-bold text-slate-900">
+              Patients
+            </h2>
+
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search patients..."
+              className="w-64 rounded-lg border border-slate-300 bg-white px-4 py-2 outline-none focus:border-blue-500"
+            />
+          </div>
 
           {loading ? (
             <p className="mt-4 text-slate-600">
               Loading patients...
             </p>
-          ) : patients.length === 0 ? (
+          ) : filteredPatients.length === 0 ? (
             <p className="mt-4 text-slate-600">
               No patients found.
             </p>
           ) : (
             <div className="mt-4 space-y-4">
-              {patients.map((patient) => (
+              {filteredPatients.map((patient) => (
                 <div
                   key={patient.id}
                   className="rounded-xl bg-white p-5 shadow-sm"
