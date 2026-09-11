@@ -31,3 +31,23 @@ class DoctorResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class AppointmentCreate(BaseModel):
+    patient_id: int
+    doctor_id: int
+    appointment_date: str
+    appointment_time: str
+    reason: str
+
+
+class AppointmentResponse(BaseModel):
+    id: int
+    patient_id: int
+    doctor_id: int
+    appointment_date: str
+    appointment_time: str
+    reason: str
+
+    class Config:
+        from_attributes = True
