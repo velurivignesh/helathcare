@@ -9,16 +9,19 @@ export default function Home() {
           </h1>
 
           <nav className="flex gap-6 text-sm text-slate-600">
-            <a href="#" className="hover:text-blue-600">
+            <a href="/" className="hover:text-blue-600">
               Dashboard
             </a>
-            <a href="#" className="hover:text-blue-600">
+
+            <a href="/patients" className="hover:text-blue-600">
               Patients
             </a>
-            <a href="#" className="hover:text-blue-600">
+
+            <a href="/doctors" className="hover:text-blue-600">
               Doctors
             </a>
-            <a href="#" className="hover:text-blue-600">
+
+            <a href="/appointments" className="hover:text-blue-600">
               Appointments
             </a>
           </nav>
@@ -62,32 +65,56 @@ export default function Home() {
           </h3>
 
           <div className="mt-5 grid gap-6 md:grid-cols-3">
-            <div className="rounded-xl bg-white p-6 shadow-sm">
+            <a
+              href="/patients"
+              className="rounded-xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
               <h4 className="text-lg font-semibold text-slate-900">
                 Patients
               </h4>
+
               <p className="mt-2 text-sm text-slate-600">
                 Register and manage patient information and medical history.
               </p>
-            </div>
 
-            <div className="rounded-xl bg-white p-6 shadow-sm">
+              <p className="mt-4 text-sm font-medium text-blue-600">
+                Manage Patients →
+              </p>
+            </a>
+
+            <a
+              href="/doctors"
+              className="rounded-xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
               <h4 className="text-lg font-semibold text-slate-900">
                 Doctors
               </h4>
+
               <p className="mt-2 text-sm text-slate-600">
                 Manage doctors, specialties, and clinic schedules.
               </p>
-            </div>
 
-            <div className="rounded-xl bg-white p-6 shadow-sm">
+              <p className="mt-4 text-sm font-medium text-blue-600">
+                Manage Doctors →
+              </p>
+            </a>
+
+            <a
+              href="/appointments"
+              className="rounded-xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
               <h4 className="text-lg font-semibold text-slate-900">
                 Appointments
               </h4>
+
               <p className="mt-2 text-sm text-slate-600">
                 Schedule and manage patient appointments.
               </p>
-            </div>
+
+              <p className="mt-4 text-sm font-medium text-blue-600">
+                Manage Appointments →
+              </p>
+            </a>
           </div>
         </section>
       </div>
