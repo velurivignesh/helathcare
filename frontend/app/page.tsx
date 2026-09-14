@@ -927,6 +927,14 @@ export default function Home() {
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
+            <a
+              href="/inpatient"
+              className="flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100 transition shadow-sm"
+            >
+              <span>🛏️</span>
+              <span>Inpatient & Wards</span>
+            </a>
+
             <button
               type="button"
               onClick={() => setChatOpen(true)}
@@ -980,6 +988,14 @@ export default function Home() {
                   {label}
                 </button>
               ))}
+
+              <a
+                href="/inpatient"
+                className="mt-1 flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 text-sm font-bold text-blue-700"
+              >
+                <span>🛏️</span>
+                <span>Inpatient & Bed Management (ADT)</span>
+              </a>
 
               <button
                 type="button"
